@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "week": {
+    "sunday": [
+      {"subject": "رياضيات", "start": "07:00", "end": "09:00", "pages": "ص 20 - 25"},
+      {"subject": "فيزياء", "start": "09:30", "end": "11:00", "pages": "ص 40 - 44"},
+      {"subject": "كيمياء", "start": "16:00", "end": "17:30", "pages": "ص 12 - 16"},
+      {"subject": "لغة عربية", "start": "18:00", "end": "19:00", "pages": "ص 60 - 63"}
+    ],
+    "monday": [
+      {"subject": "إنجليزي", "start": "08:00", "end": "09:00", "pages": "ص 10 - 14"}
+    ],
+    "tuesday": [],
+    "wednesday": [],
+    "thursday": [],
+    "friday": [],
+    "saturday": []
+  }
+}
