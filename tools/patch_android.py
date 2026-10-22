@@ -34,3 +34,19 @@ x = x.replace("<activity",
 x = re.sub(r'android:label="[^"]*"', 'android:label="NOON"', x, count=1)
 open(m, "w").write(x)
 print("manifest patched")
+
+# ---- Manifest: notification receivers ----
+x = open(m).read()
+recv = """    <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
+    <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+        <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+            <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+            <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+        </intent-filter>
+    </receiver>
+"""
+x = x.replace("</application>", recv + "</application>", 1)
+open(m, "w").write(x)
+print("receivers added")

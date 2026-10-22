@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'data.dart';
+import 'alarms.dart';
+import 'alarm_sheet.dart';
 
 const kGold = Color(0xFFFFB23E);
 const kPurple = Color(0xFFB892FF);
@@ -8,7 +10,11 @@ const kTeal = Color(0xFF5EEAD4);
 const kBg1 = Color(0xFF1B1230);
 const kBg2 = Color(0xFF221533);
 
-void main() => runApp(const NoonApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AlarmService.init();
+  runApp(const NoonApp());
+}
 
 class NoonApp extends StatelessWidget {
   const NoonApp({super.key});
@@ -188,6 +194,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 ],
               ),
             ),
+            const BellButton(),
+            const SizedBox(width: 8),
             GestureDetector(
               onTap: _refresh,
               child: Glass(

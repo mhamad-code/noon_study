@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'config.dart';
+import 'alarms.dart';
 
 const dayKeys = [
   'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'
@@ -71,6 +72,7 @@ class ScheduleService {
       final sch = Schedule.fromJson(jsonDecode(body) as Map<String, dynamic>);
       final p = await SharedPreferences.getInstance();
       await p.setString(_cacheKey, body);
+      await AlarmService.scheduleAll(sch);
       return sch;
     } catch (_) {
       return null;
