@@ -24,6 +24,9 @@ jobs:
       - name: Generate android folder
         run: flutter create --platforms=android --org com.noon --project-name noon_study .
 
+      - name: Patch Android config
+        run: python3 tools/patch_android.py
+
       - name: Get packages
         run: flutter pub get
 
