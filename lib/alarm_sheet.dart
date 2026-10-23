@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'alarms.dart';
+import 'data.dart';
 import 'main.dart';
 
 class BellButton extends StatelessWidget {
@@ -30,6 +31,7 @@ class AlarmSheet extends StatefulWidget {
 class _AlarmSheetState extends State<AlarmSheet> {
   AlarmStatus? _st;
   String _note = '';
+  bool _noteOk = true;
 
   @override
   void initState() {
@@ -42,6 +44,44 @@ class _AlarmSheetState extends State<AlarmSheet> {
     if (mounted) setState(() => _st = s);
   }
 
+  Future<void> _perms() async {
+    await AlarmService.requestPermissions();
+  }
+
+  Future<void> _reschedule() async {
+    final c = await ScheduleService.loadCached();
+    if (c == null) {
+      setState(() {
+        _noteOk = false;
+        _note = 'ما في جدول محفوظ. افتح التطبيق مع إنترنت أول مرة.';
+      });
+      return;
+    }
+    final o = await AlarmService.ensureScheduled(c, force: true);
+    setState(() {
+      if (o.planned == 0) {
+        _noteOk = true;
+        _note = 'ما في دروس لجدولتها.';
+      } else if (o.ok) {
+        _noteOk = o.warning == null;
+        _note = 'تمت جدولة ${o.scheduled} منبه';
+      } else {
+        _noteOk = false;
+        _note = o.warning ?? 'فشلت الجدولة';
+      }
+    });
+  }
+
+  Future<void> _test() async {
+    final err = await AlarmService.test();
+    setState(() {
+      _noteOk = err == null;
+      _note = err == null
+          ? 'رح يرن بعد 10 ثواني. اقفل الشاشة وجرب.'
+          : 'فشلت التجربة: $err';
+    });
+  }
+
   Widget _row(String t, bool ok) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 6),
         child: Row(
@@ -52,6 +92,11 @@ class _AlarmSheetState extends State<AlarmSheet> {
             Expanded(child: Text(t)),
           ],
         ),
+      );
+
+  Widget _warn(String t) => Padding(
+        padding: const EdgeInsets.only(top: 6),
+        child: Text(t, style: const TextStyle(fontSize: 12, color: kGold)),
       );
 
   Widget _btn(String t, IconData i, Color c, Future<void> Function() f) =>
@@ -85,6 +130,18 @@ class _AlarmSheetState extends State<AlarmSheet> {
   @override
   Widget build(BuildContext context) {
     final s = _st;
+    final last = AlarmService.last;
+    final dataErr = ScheduleService.lastError;
+    String pendingText = '';
+    bool pendingOk = false;
+    if (s != null) {
+      pendingText = 'منبهات مجدولة: ${s.pending}';
+      pendingOk = s.pending > 0;
+      if (last != null && last.planned != s.pending) {
+        pendingText = 'منبهات مجدولة: ${s.pending} من ${last.planned}';
+        pendingOk = false;
+      }
+    }
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SafeArea(
@@ -106,20 +163,19 @@ class _AlarmSheetState extends State<AlarmSheet> {
               else ...[
                 _row('صلاحية الإشعارات', s.notifications),
                 _row('المنبهات الدقيقة', s.exact),
-                _row('منبهات مجدولة: ${s.pending}', s.pending > 0),
+                _row(pendingText, pendingOk),
               ],
-              _btn('تفعيل الصلاحيات', Icons.lock_open, kGold,
-                  AlarmService.requestPermissions),
+              if (last != null && last.warning != null) _warn(last.warning!),
+              if (dataErr != null) _warn(dataErr),
+              _btn('تفعيل الصلاحيات', Icons.lock_open, kGold, _perms),
+              _btn('إعادة جدولة المنبهات', Icons.sync, kTeal, _reschedule),
               _btn('تجربة منبه بعد 10 ثواني', Icons.notifications_active,
-                  kPurple, () async {
-                await AlarmService.test();
-                setState(() => _note =
-                    'رح يرن بعد 10 ثواني. اقفل الشاشة وجرب كمان مرة 👌');
-              }),
+                  kPurple, _test),
               if (_note.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: 12),
-                  child: Text(_note, style: const TextStyle(color: kTeal)),
+                  child: Text(_note,
+                      style: TextStyle(color: _noteOk ? kTeal : kGold)),
                 ),
               const SizedBox(height: 14),
               Text(

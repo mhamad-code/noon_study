@@ -30,13 +30,26 @@ jobs:
       - name: Get packages
         run: flutter pub get
 
+      - name: Analyze
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
+
+      - name: Test
+        run: flutter test
+
       - name: Generate app icons
         run: dart run flutter_launcher_icons
 
       - name: Build APK
         run: flutter build apk --release --no-shrink
 
+      - name: Verify APK
+        run: |
+          APK=build/app/outputs/flutter-apk/app-release.apk
+          test -s "$APK"
+          ls -lh "$APK"
+
       - uses: actions/upload-artifact@v4
         with:
           name: noon-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error

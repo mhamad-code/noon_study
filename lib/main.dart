@@ -158,7 +158,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   String _status() {
     if (_loading) return 'جاري التحديث…';
     if (_schedule == null) return _failed ? 'تعذر تحميل الجدول' : '';
-    if (_failed) return 'بدون إنترنت · النسخة المحفوظة v${_schedule!.version}';
     return 'محدّث · النسخة v${_schedule!.version}';
   }
 
