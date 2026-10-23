@@ -18,6 +18,7 @@ void callbackDispatcher() {
       if (s != null) await AlarmService.ensureScheduled(s);
       final p = await SharedPreferences.getInstance();
       await p.setString('bg_last', DateTime.now().toIso8601String());
+      await p.setInt('bg_count', (p.getInt('bg_count') ?? 0) + 1);
       if (remote != null) await p.setInt('bg_ver', remote.version);
     } catch (_) {}
     return true;
@@ -31,23 +32,28 @@ Future<void> setupBackground() async {
       'noon-refresh',
       'refreshSchedule',
       frequency: const Duration(minutes: 15),
+      existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
       constraints: Constraints(networkType: NetworkType.connected),
     );
   } catch (_) {}
 }
 
 Future<String> backgroundInfo() async {
-  const none = 'لم يعمل الفحص بالخلفية بعد';
   try {
     final p = await SharedPreferences.getInstance();
     await p.reload();
+    final src = p.getString('last_src');
+    final srcLine = src == null ? '' : '\nمصدر آخر تحميل: $src';
     final at = DateTime.tryParse(p.getString('bg_last') ?? '');
-    if (at == null) return none;
+    if (at == null) return 'لم يعمل الفحص بالخلفية بعد$srcLine';
     final m = DateTime.now().difference(at).inMinutes;
-    final when = m < 1 ? 'الآن' : (m < 60 ? 'منذ $m دقيقة' : 'منذ ${m ~/ 60} ساعة');
+    final when =
+        m < 1 ? 'الآن' : (m < 60 ? 'منذ $m دقيقة' : 'منذ ${m ~/ 60} ساعة');
     final ver = p.getInt('bg_ver');
-    return 'آخر فحص بالخلفية: $when${ver == null ? '' : ' (نسخة v$ver)'}';
+    final cnt = p.getInt('bg_count') ?? 0;
+    final v = ver == null ? '' : ' (نسخة v$ver)';
+    return 'آخر فحص بالخلفية: $when$v · عدد الفحوصات: $cnt$srcLine';
   } catch (_) {
-    return none;
+    return 'لم يعمل الفحص بالخلفية بعد';
   }
 }
