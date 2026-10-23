@@ -4,7 +4,7 @@ import 'package:noon_study/data.dart';
 
 dynamic _json(Map<String, dynamic> m) => jsonDecode(jsonEncode(m));
 
-Map<String, dynamic> _base() => {
+Map<String, dynamic> _raw() => {
       'version': 2,
       'week': {
         'sunday': [
@@ -18,6 +18,9 @@ Map<String, dynamic> _base() => {
         ],
       },
     };
+
+Map<String, dynamic> _base() =>
+    jsonDecode(jsonEncode(_raw())) as Map<String, dynamic>;
 
 void main() {
   test('valid schedule parses and normalizes times', () {
