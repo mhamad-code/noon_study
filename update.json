@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "week": {
     "sunday": [
       {"subject": "رياضيات", "start": "07:00", "end": "09:00", "pages": "ص 20 - 25"},
@@ -13,7 +13,7 @@
     "tuesday": [],
     "wednesday": [],
     "thursday": [],
-    "friday": [],
+    "friday": [{"subject": "تجربة", "start": "16:38", "end": "16:43", "pages": "ص 1"}],
     "saturday": []
   }
 }
