@@ -117,6 +117,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Schedule? _schedule;
   bool _loading = false;
   bool _failed = false;
+  DateTime _lastDone = DateTime.fromMillisecondsSinceEpoch(0);
   int _day = DateTime.now().weekday % 7;
 
   @override
@@ -134,7 +135,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) _refresh();
+    if (state == AppLifecycleState.resumed &&
+        !_loading &&
+        DateTime.now().difference(_lastDone) > const Duration(seconds: 60)) {
+      _refresh();
+    }
   }
 
   Future<void> _init() async {
@@ -150,6 +155,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     if (!mounted) return;
     setState(() {
       _loading = false;
+      _lastDone = DateTime.now();
       _failed = fresh == null;
       if (fresh != null) _schedule = fresh;
     });

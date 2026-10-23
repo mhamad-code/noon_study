@@ -84,3 +84,27 @@ for need in ("showWhenLocked", "ScheduledNotificationReceiver",
     if need not in x:
         fail("manifest missing: " + need)
 print("manifest ok")
+
+# ---------- R8 / Gson keep rules (flutter_local_notifications) ----------
+rules = """-keep class com.dexterous.flutterlocalnotifications.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.google.gson.** { *; }
+-keep class * extends com.google.gson.reflect.TypeToken
+-keep,allowobfuscation,allowshrinking class com.google.gson.reflect.TypeToken
+"""
+open("android/app/proguard-rules.pro", "w", encoding="utf-8").write(rules)
+
+s = open(gp, encoding="utf-8").read()
+if "proguard-rules.pro" not in s:
+    pat = re.compile(r"(buildTypes\s*\{\s*release\s*\{)")
+    if pat.search(s):
+        if kts:
+            line = '\n            proguardFiles("proguard-rules.pro")'
+        else:
+            line = "\n            proguardFiles 'proguard-rules.pro'"
+        s = pat.sub(lambda mt: mt.group(1) + line, s, count=1)
+        open(gp, "w", encoding="utf-8").write(s)
+        print("proguard rules attached")
+    else:
+        print("WARNING: release block not found, proguard rules NOT attached")
