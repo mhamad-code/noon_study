@@ -108,3 +108,61 @@ if "proguard-rules.pro" not in s:
         print("proguard rules attached")
     else:
         print("WARNING: release block not found, proguard rules NOT attached")
+
+# ---------- Signing: use key.properties when present ----------
+s = open(gp, encoding="utf-8").read()
+if "keystoreProperties" not in s:
+    if kts:
+        loader = '''val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
+'''
+        cfg = '''android {
+    signingConfigs {
+        create("release") {
+            if (keystorePropertiesFile.exists()) {
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                storeFile = file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+            }
+        }
+    }
+'''
+        old = 'signingConfig = signingConfigs.getByName("debug")'
+        new = 'signingConfig = if (keystorePropertiesFile.exists()) signingConfigs.getByName("release") else signingConfigs.getByName("debug")'
+    else:
+        loader = '''def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+'''
+        cfg = '''android {
+    signingConfigs {
+        release {
+            if (keystorePropertiesFile.exists()) {
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+            }
+        }
+    }
+'''
+        old = "signingConfig signingConfigs.debug"
+        new = "signingConfig keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug"
+    if not re.search(r"^android \{\n", s, re.M):
+        fail("android block not found for signing")
+    if old not in s:
+        fail("debug signingConfig line not found")
+    s = re.sub(r"^android \{\n", lambda mt: loader + cfg, s, count=1, flags=re.M)
+    if kts:
+        s = "import java.util.Properties\nimport java.io.FileInputStream\n\n" + s
+    s = s.replace(old, new, 1)
+    open(gp, "w", encoding="utf-8").write(s)
+print("signing patch ok")

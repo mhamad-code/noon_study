@@ -6,3 +6,6 @@ build/
 android/
 *.iml
 .idea/
+*.jks
+*.keystore
+key.properties
