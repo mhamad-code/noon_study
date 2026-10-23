@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'alarms.dart';
 import 'config.dart';
+import 'net.dart';
 
 const dayKeys = [
   'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'
@@ -165,9 +166,7 @@ class ScheduleService {
 
   static Future<Schedule?> fetchRemote() async {
     try {
-      final r = await http
-          .get(Uri.parse(updateUrl))
-          .timeout(const Duration(seconds: 15));
+      final r = await downloadUpdate();
       if (r.statusCode != 200) {
         lastError = 'تعذر تحميل الملف (رمز ${r.statusCode})';
         return null;
