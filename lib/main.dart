@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'data.dart';
 import 'alarms.dart';
 import 'alarm_sheet.dart';
+import 'background.dart';
 
 const kGold = Color(0xFFFFB23E);
 const kPurple = Color(0xFFB892FF);
@@ -13,6 +14,7 @@ const kBg2 = Color(0xFF221533);
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AlarmService.init();
+  await setupBackground();
   runApp(const NoonApp());
 }
 

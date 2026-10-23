@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'alarms.dart';
+import 'background.dart';
 import 'data.dart';
 import 'main.dart';
 
@@ -31,6 +32,7 @@ class AlarmSheet extends StatefulWidget {
 class _AlarmSheetState extends State<AlarmSheet> {
   AlarmStatus? _st;
   String _note = '';
+  String _bg = '';
   bool _noteOk = true;
 
   @override
@@ -41,7 +43,13 @@ class _AlarmSheetState extends State<AlarmSheet> {
 
   Future<void> _load() async {
     final s = await AlarmService.status();
-    if (mounted) setState(() => _st = s);
+    final bg = await backgroundInfo();
+    if (mounted) {
+      setState(() {
+        _st = s;
+        _bg = bg;
+      });
+    }
   }
 
   Future<void> _perms() async {
@@ -164,6 +172,7 @@ class _AlarmSheetState extends State<AlarmSheet> {
                 _row('صلاحية الإشعارات', s.notifications),
                 _row('المنبهات الدقيقة', s.exact),
                 _row(pendingText, pendingOk),
+                _row(_bg, _bg.startsWith("آخر")),
               ],
               if (last != null && last.warning != null) _warn(last.warning!),
               if (dataErr != null) _warn(dataErr),
