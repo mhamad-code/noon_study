@@ -1,19 +1,42 @@
 {
-  "version": 21,
+  "version": 22,
   "week": {
     "sunday": [
-      {"subject": "رياضيات", "start": "07:00", "end": "09:00", "pages": "ص 20 - 25"},
-      {"subject": "فيزياء", "start": "09:30", "end": "11:00", "pages": "ص 40 - 44"},
-      {"subject": "كيمياء", "start": "16:00", "end": "17:30", "pages": "ص 12 - 16"},
-      {"subject": "لغة عربية", "start": "18:00", "end": "19:00", "pages": "ص 60 - 63"}
+      {"subject": "انكليزي", "start": "04:00", "end": "06:30", "pages": "10 صفحات"},
+      {"subject": "فيزياء", "start": "15:00", "end": "17:30", "pages": "10 صفحات"},
+      {"subject": "عربي", "start": "19:00", "end": "21:30", "pages": "10 صفحات"}
     ],
     "monday": [
-      {"subject": "إنجليزي", "start": "08:00", "end": "09:00", "pages": "ص 10 - 14"}
+      {"subject": "رياضيات", "start": "04:00", "end": "06:30", "pages": "10 صفحات"},
+      {"subject": "ديانة", "start": "15:00", "end": "17:30", "pages": "10 صفحات"},
+      {"subject": "كيمياء", "start": "19:00", "end": "21:30", "pages": "10 صفحات"}
     ],
-    "tuesday": [],
-    "wednesday": [],
-    "thursday": [],
-    "friday": [],
-    "saturday": []
+    "tuesday": [
+      {"subject": "انكليزي", "start": "04:00", "end": "06:30", "pages": "10 صفحات"},
+      {"subject": "علوم", "start": "15:00", "end": "17:30", "pages": "10 صفحات"},
+      {"subject": "فيزياء", "start": "19:00", "end": "21:30", "pages": "10 صفحات"}
+    ],
+    "wednesday": [
+      {"subject": "فرنسي", "start": "04:00", "end": "06:30", "pages": "10 صفحات"},
+      {"subject": "علوم", "start": "15:00", "end": "17:30", "pages": "10 صفحات"},
+      {"subject": "عربي", "start": "19:00", "end": "21:30", "pages": "10 صفحات"}
+    ],
+    "thursday": [
+      {"subject": "عربي", "start": "04:00", "end": "06:30", "pages": "10 صفحات"},
+      {"subject": "كيمياء", "start": "15:00", "end": "17:30", "pages": "10 صفحات"},
+      {"subject": "رياضيات", "start": "19:00", "end": "21:30", "pages": "10 صفحات"}
+    ],
+    "friday": [
+      {"subject": "رياضيات", "start": "04:30", "end": "07:00", "pages": "10 صفحات"},
+      {"subject": "علوم", "start": "09:30", "end": "12:00", "pages": "10 صفحات"},
+      {"subject": "انكليزي", "start": "15:00", "end": "17:30", "pages": "10 صفحات"},
+      {"subject": "عربي", "start": "19:00", "end": "21:30", "pages": "10 صفحات"}
+    ],
+    "saturday": [
+      {"subject": "رياضيات", "start": "04:30", "end": "07:00", "pages": "10 صفحات"},
+      {"subject": "فرنسي", "start": "09:30", "end": "12:00", "pages": "10 صفحات"},
+      {"subject": "ديانة", "start": "15:00", "end": "17:30", "pages": "10 صفحات"},
+      {"subject": "فيزياء", "start": "19:00", "end": "21:30", "pages": "10 صفحات"}
+    ]
   }
 }
