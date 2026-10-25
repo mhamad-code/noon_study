@@ -433,7 +433,7 @@ class LessonCard extends StatelessWidget {
                         children: [
                           Icon(Icons.schedule, size: 16, color: color),
                           const SizedBox(width: 6),
-                          Text('${lesson.start} – ${lesson.end}'),
+                          Text(fmtRange(lesson)),
                         ],
                       ),
                       if (lesson.pages.isNotEmpty) ...[

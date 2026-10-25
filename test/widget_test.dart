@@ -21,7 +21,7 @@ void main() {
     ));
     await tester.pumpAndSettle();
     expect(find.text('رياضيات'), findsOneWidget);
-    expect(find.text('07:00 – 09:00'), findsOneWidget);
+    expect(find.text('7:00 ص – 9:00 ص'), findsOneWidget);
     expect(find.text('ص 20 - 25'), findsOneWidget);
   });
 }

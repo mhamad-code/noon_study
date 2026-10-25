@@ -193,3 +193,16 @@ class ScheduleService {
     }
   }
 }
+
+/// "16:30" -> "4:30 م"
+String fmt12(String t) {
+  final m = timeToMinutes(t);
+  if (m < 0) return t;
+  final h24 = m ~/ 60;
+  final mm = (m % 60).toString().padLeft(2, '0');
+  final h = h24 % 12 == 0 ? 12 : h24 % 12;
+  return '$h:$mm ${h24 < 12 ? 'ص' : 'م'}';
+}
+
+String fmtRange(Lesson l) =>
+    l.end.isEmpty ? fmt12(l.start) : '${fmt12(l.start)} – ${fmt12(l.end)}';

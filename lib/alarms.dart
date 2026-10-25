@@ -136,7 +136,7 @@ class AlarmService {
       final lessons = s.week[dayKeys[d]] ?? <Lesson>[];
       for (int i = 0; i < lessons.length; i++) {
         final l = lessons[i];
-        final range = '${l.start} – ${l.end}';
+        final range = fmtRange(l);
         final a = nextOccurrence(d, l.start, now);
         if (a != null) {
           out.add(PlannedAlarm(
@@ -191,7 +191,7 @@ class AlarmService {
     if (!notifOn) warns.add('إشعارات التطبيق مغلقة، فعّلها من زر الجرس');
     if (!exact) warns.add('المنبهات الدقيقة غير مفعّلة، ممكن يتأخر المنبه');
 
-    final sig = '${s.signature}|exact=$exact|tz=${tz.local.name}';
+    final sig = '${s.signature}|exact=$exact|tz=${tz.local.name}|fmt=12h';
     final prefs = await SharedPreferences.getInstance();
     final pending = await _pendingCount();
 
